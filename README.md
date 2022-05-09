@@ -11,3 +11,4 @@
 * JPA hibernate with custom methods too are covered. (JDBC template applications will come in subsequent projects) 
 * Test cases are not written for this project.
 * Packing structure is maintained for easy understanding.
+* Lombok annotations are used as good coding practice.
