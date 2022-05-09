@@ -1,14 +1,11 @@
-# Microservices POCs
-This repository contains all the Proof of Concepts done by me related to microservices using springboot and java 8 features. The followings are the concepts that I have tried to implement: 
-1) REST APIs
-2) FeignClient Calls
-3) SOAP APIs
-4) Apache Kafka
-5) Confluent Kafka
-6) Mockito for unit testing
-7) Camunda Workflow 
-8) Prometheus/Grafana
-
-There are multiple branches inside this repo and the name of each branch corresponds to the name of the microservice application. So basically each branch represents one-one project and there is a README.md file maintained inside each branch describing about the microservice application like the functionalities and what concept of the vast microservice artchitecture is used.
-
-Any suggestions are positively welcomed !!!!
+# MovieApp
+* This is a very simple start-level microservice to show how to make Rest APIs.
+* Basically it exposes four apis to demonstrate the CRUD (Create, Retrieve, Update and Delete) operations on movie related information.
+  * For creating a new movie details entry, a POST api has been constructed.
+  * For retrieving or fetching movie details, two GET apis are made available. Now this can return all the movie related details through '/movies' endpoint.         Else, we can also fetch a particular movie detail by movie id through '/movie/{id}' or '/movie?id=<some_num>' endpoint.
+  * A PUT method is used for updating an existing movie by id. If not present, new movie details are created.
+  * DeleteMapping has been used for deleting an existent movie info.
+* The in-memory H2 database has been used.
+* JPA hibernate with custom methods too are covered. (JDBC template applications will come in subsequent projects) 
+* Test cases are not written for this project.
+* Packing structure is maintained for easy understanding.
