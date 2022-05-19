@@ -1,7 +1,7 @@
 {
   "name": "customerCreateEvent",
   "type": "record",
-  "namespace": "demo.customermanagement.core.dto.kafkaresponse",
+  "namespace": "com.Kafka.avro",
   "fields": [
     {
       "name": "eventId",

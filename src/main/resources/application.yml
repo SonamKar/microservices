@@ -26,13 +26,16 @@ spring:
     user:
       name: sonam
       password: sonam@123
-
-COM:
-  consumer:
-    topic: customer
-    groupId: createCustomer
-    bootstrap-servers: http://localhost:9092
-    schema-registry: http://localhost:8081
+  kafka:
+    consumer:
+      topic: customer
+      groupId: customer-management
+      bootstrap-servers: http://localhost:9092
+      schema-registry: http://localhost:8081
+    producer:
+      topic: customer
+      bootstrap-servers: http://localhost:9092
+      schema-registry: http://localhost:8081
 
 resilience4j:
   circuitbreaker:
