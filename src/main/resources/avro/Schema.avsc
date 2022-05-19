@@ -1,0 +1,288 @@
+{
+  "name": "customerCreateEvent",
+  "type": "record",
+  "namespace": "demo.customermanagement.core.dto.kafkaresponse",
+  "fields": [
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+    {
+      "name": "eventTime",
+      "type": "string"
+    },
+    {
+      "name": "eventType",
+      "type": "string"
+    },
+    {
+      "name": "event",
+      "type": {
+        "name": "event_record",
+        "type": "record",
+        "fields": [
+          {
+            "name": "customer",
+            "type": {
+              "name": "customer_record",
+              "type": "record",
+              "fields": [
+                {
+                  "name": "at_type",
+                  "type": "string"
+                },
+                {
+                  "name": "href",
+                  "type": "string"
+                },
+                {
+                  "name": "id",
+                  "type": "string"
+                },
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "status",
+                  "type": "string"
+                },
+                {
+                  "name": "statusReason",
+                  "type": "string"
+                },
+                {
+                  "name": "validFor",
+                  "type": {
+                    "name": "validFor",
+                    "type": "record",
+                    "fields": [
+                      {
+                        "name": "startDateTime",
+                        "type": "string"
+                      },
+                      {
+                        "name": "endDateTime",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "engagedParty",
+                  "type": {
+                    "name": "engagedParty_record",
+                    "type": "record",
+                    "fields": [
+                      {
+                        "name": "at_referredType",
+                        "type": "string"
+                      },
+                      {
+                        "name": "givenName",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "middleName",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "familyName",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "fullName",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "gender",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "birthDate",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "nationality",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "individualIdentification",
+                        "type": {
+                          "name": "individualIdentification_record",
+                          "type": "record",
+                          "fields": [
+                            {
+                              "name": "identificationId",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "identificationType",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "issuingDate",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "issuingAuthority",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "placeOfIssue",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "validFor",
+                              "type": {
+                                "name": "validFor_record",
+                                "type": "record",
+                                "fields": [
+                                  {
+                                    "name": "startDateTime",
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ],
+                                    "default": null
+                                  },
+                                  {
+                                    "name": "endDateTime",
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ],
+                                    "default": null
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "contactMedium",
+                        "type": {
+                          "name": "contactMedium_record",
+                          "type": "record",
+                          "fields": [
+                            {
+                              "name": "mediumType",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "characteristic",
+                              "type": {
+                                "name": "characteristic_record",
+                                "type": "record",
+                                "fields": [
+                                  {
+                                    "name": "emailAddress",
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ],
+                                    "default": null
+                                  },
+                                  {
+                                    "name": "phoneNumber",
+                                    "type": [
+                                      "null",
+                                      "string"
+                                    ],
+                                    "default": null
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "partyCharacteristic",
+                        "type": {
+                          "name": "partyCharacteristic_record",
+                          "type": "record",
+                          "fields": [
+                            {
+                              "name": "name",
+                              "type": "string"
+                            },
+                            {
+                              "name": "value",
+                              "type": "string"
+                            },
+                            {
+                              "name": "valueType",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

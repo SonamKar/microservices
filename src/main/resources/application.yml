@@ -1,0 +1,124 @@
+application:
+  security:
+    exclusions: /v3/api-docs/**, /swagger*/**, /actuator/**
+
+server:
+  port: 8092
+
+spring:
+  datasource:
+    datasource:
+      url: jdbc:h2:mem:customer_data
+      driverClassName: org.h2.Driver
+      username: sa
+      password:
+    hikari:
+      idle-timeout: 10000
+      minimum-idle: 0
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    h2:
+      console:
+        enabled: true
+  security:
+    user:
+      name: sonam
+      password: sonam@123
+
+COM:
+  consumer:
+    topic: customer
+    groupId: createCustomer
+    bootstrap-servers: http://localhost:9092
+    schema-registry: http://localhost:8081
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 4
+        slowCallDurationThreshold: 2000
+        slowCallRateThreshold: 100
+        waitDurationInOpenState: 40000
+        permittedNumberOfCallsInHalfOpenState: 5
+        recordExceptions:
+          - feign.RetryableException
+        ignoreExceptions:
+          - demo.customermanagement.core.exception.DataException
+          - demo.customermanagement.core.exception.FunctionalException
+          - demo.customermanagement.core.exception.TechnicalException
+    instances:
+      CreateCustomerFeign:
+        baseConfig: default
+    circuit-breaker-aspect-order: 1
+  bulkhead:
+    configs:
+      default:
+        maxConcurrentCalls: 50
+        maxWaitDuration: 2000ms
+    instances:
+      CreateCustomerFeign:
+        baseConfig: default
+  ratelimiter:
+    configs:
+      default:
+        limitForPeriod: 50
+        limitRefreshPeriod: 10000
+        timeoutDuration: 2000ms
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+    instances:
+      CreateCustomerFeign:
+        baseConfig: default
+    rate-limiter-aspect-order: 3
+  retry:
+    configs:
+      default:
+        maxRetryAttempts: 3
+        waitDuration: 2s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - feign.RetryableException
+        ignoreExceptions:
+          - demo.customermanagement.core.exception.TechnicalException
+    instances:
+      CreateCustomerFeign:
+        baseConfig: default
+    retry-aspect-order: 2
+
+management:
+  endpoints:
+    web.exposure.include: health, metrics
+  endpoint:
+    health.show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        resilience4j.circuitbreaker.calls: true
+
+create-customer:
+  url: localhost:8090/createCustomer
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+create-customer-feign:
+  username: createcustomer
+  password: createcustomer
+
