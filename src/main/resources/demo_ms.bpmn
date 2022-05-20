@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0rm830z" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="demo_ms" name="Demo_MS" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0v3a85k" sourceRef="order-checkout" targetRef="timer-1" />
+    <bpmn:serviceTask id="Activity_057kff6" name="Retrieve Payment" camunda:class="com.example.workflow.adapter.RetrievePaymentDelegate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="orderId">${orderid}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1twpyc5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1woiijb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="timer-1" name="Timer-1">
+      <bpmn:incoming>Flow_0v3a85k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1twpyc5</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1pwar5q">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1twpyc5" sourceRef="timer-1" targetRef="Activity_057kff6" />
+    <bpmn:intermediateCatchEvent id="end_timer" name="End_Timer">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="order">completed</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0q7ql6x</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qurebm</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1uwxnh3">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="Event_1r2bk5s" name="Payment Retrieved">
+      <bpmn:incoming>Flow_1qurebm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1qurebm" sourceRef="end_timer" targetRef="Event_1r2bk5s" />
+    <bpmn:startEvent id="order-checkout" name="Order Checkout">
+      <bpmn:outgoing>Flow_0v3a85k</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="Event_10tkgao" name="Timer-2">
+      <bpmn:incoming>Flow_1woiijb</bpmn:incoming>
+      <bpmn:outgoing>Flow_0b1cyzv</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_07ozuz9">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Activity_1r9cotn" name="Analyze Payment" camunda:class="com.example.workflow.adapter.AnalyzePaymentDetails">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="PaymentStatus">${paymentStatus}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0b1cyzv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zjywgp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1woiijb" sourceRef="Activity_057kff6" targetRef="Event_10tkgao" />
+    <bpmn:sequenceFlow id="Flow_0b1cyzv" sourceRef="Event_10tkgao" targetRef="Activity_1r9cotn" />
+    <bpmn:exclusiveGateway id="Gateway_1qsz0uk">
+      <bpmn:incoming>Flow_0zjywgp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vn0s4y</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1p04n6e</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0zjywgp" sourceRef="Activity_1r9cotn" targetRef="Gateway_1qsz0uk" />
+    <bpmn:serviceTask id="Activity_0oycrj4" name="Payment Completed" camunda:class="com.example.workflow.adapter.PaymentCompletedDelegate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="output">${output}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1jshh6y</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q7ql6x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_1pbk2ty" name="Timer-3">
+      <bpmn:incoming>Flow_0vn0s4y</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jshh6y</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1sa48kl">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Event_095ag8d" name="Timer-4">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="error">error occurred</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1p04n6e</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jm3iun</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1mingfn">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0vn0s4y" name="flow_success" sourceRef="Gateway_1qsz0uk" targetRef="Event_1pbk2ty">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${PaymentStatus=='done'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1p04n6e" name="flow_err" sourceRef="Gateway_1qsz0uk" targetRef="Event_095ag8d">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${PaymentStatus=='pending'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1jshh6y" sourceRef="Event_1pbk2ty" targetRef="Activity_0oycrj4" />
+    <bpmn:endEvent id="Event_16lymrj" name="Error ">
+      <bpmn:incoming>Flow_0jm3iun</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0o0tm1c" errorRef="Error_14o3bb6" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0jm3iun" sourceRef="Event_095ag8d" targetRef="Event_16lymrj" />
+    <bpmn:sequenceFlow id="Flow_0q7ql6x" sourceRef="Activity_0oycrj4" targetRef="end_timer" />
+  </bpmn:process>
+  <bpmn:message id="Message_02huneb" name="serviceStart" />
+  <bpmn:message id="Message_1nnl9rt" name="order-checkout-msg" />
+  <bpmn:error id="Error_14o3bb6" name="Error_2ff7j7s" errorCode="err-100" camunda:errorMessage="Payment isn&#39;t completed" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="demo_ms">
+      <bpmndi:BPMNEdge id="Flow_0q7ql6x_di" bpmnElement="Flow_0q7ql6x">
+        <di:waypoint x="830" y="230" />
+        <di:waypoint x="902" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jm3iun_di" bpmnElement="Flow_0jm3iun">
+        <di:waypoint x="628" y="400" />
+        <di:waypoint x="692" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jshh6y_di" bpmnElement="Flow_1jshh6y">
+        <di:waypoint x="628" y="230" />
+        <di:waypoint x="730" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1p04n6e_di" bpmnElement="Flow_1p04n6e">
+        <di:waypoint x="520" y="345" />
+        <di:waypoint x="520" y="400" />
+        <di:waypoint x="592" y="400" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="515" y="370" width="40" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vn0s4y_di" bpmnElement="Flow_0vn0s4y">
+        <di:waypoint x="520" y="295" />
+        <di:waypoint x="520" y="230" />
+        <di:waypoint x="592" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="504" y="260" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zjywgp_di" bpmnElement="Flow_0zjywgp">
+        <di:waypoint x="450" y="320" />
+        <di:waypoint x="495" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b1cyzv_di" bpmnElement="Flow_0b1cyzv">
+        <di:waypoint x="400" y="228" />
+        <di:waypoint x="400" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1woiijb_di" bpmnElement="Flow_1woiijb">
+        <di:waypoint x="430" y="110" />
+        <di:waypoint x="451" y="110" />
+        <di:waypoint x="451" y="210" />
+        <di:waypoint x="418" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qurebm_di" bpmnElement="Flow_1qurebm">
+        <di:waypoint x="938" y="230" />
+        <di:waypoint x="1002" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1twpyc5_di" bpmnElement="Flow_1twpyc5">
+        <di:waypoint x="298" y="100" />
+        <di:waypoint x="314" y="100" />
+        <di:waypoint x="314" y="110" />
+        <di:waypoint x="330" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0v3a85k_di" bpmnElement="Flow_0v3a85k">
+        <di:waypoint x="218" y="100" />
+        <di:waypoint x="262" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0uoef25_di" bpmnElement="Activity_057kff6">
+        <dc:Bounds x="330" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="timer-1_di" bpmnElement="timer-1">
+        <dc:Bounds x="262" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="263" y="125" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="delivery-timer_di" bpmnElement="end_timer">
+        <dc:Bounds x="902" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="892" y="188" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1r2bk5s_di" bpmnElement="Event_1r2bk5s">
+        <dc:Bounds x="1002" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="996" y="258" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19x8oqc_di" bpmnElement="order-checkout">
+        <dc:Bounds x="182" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="161" y="125" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0i0ht70_di" bpmnElement="Event_10tkgao">
+        <dc:Bounds x="382" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="381" y="168" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kxqxtz_di" bpmnElement="Activity_1r9cotn">
+        <dc:Bounds x="350" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1qsz0uk_di" bpmnElement="Gateway_1qsz0uk" isMarkerVisible="true">
+        <dc:Bounds x="495" y="295" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17ru3w3_di" bpmnElement="Activity_0oycrj4">
+        <dc:Bounds x="730" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ef83dl_di" bpmnElement="Event_1pbk2ty">
+        <dc:Bounds x="592" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="592" y="255" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0zp7d9z_di" bpmnElement="Event_095ag8d">
+        <dc:Bounds x="592" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="592" y="425" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08pbdh3_di" bpmnElement="Event_16lymrj">
+        <dc:Bounds x="692" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="699" y="425" width="26" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
