@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0nau9iu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="PerformFallback" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Fallback Start">
+      <bpmn:outgoing>Flow_1smffaa</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1nlvq42" name="Get PO Status" camunda:class="com.example.workflow.service.delegate.GetPOStatusDelegate">
+      <bpmn:incoming>Flow_1uzu6e8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hf7nl6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1smffaa" sourceRef="StartEvent_1" targetRef="Event_1ow8tig" />
+    <bpmn:boundaryEvent id="Event_0ku8yu0" name="error_boundary" attachedToRef="Activity_1nlvq42">
+      <bpmn:outgoing>Flow_04nr4nb</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1sz14q2" errorRef="Error_0eyuv4q" />
+    </bpmn:boundaryEvent>
+    <bpmn:callActivity id="Activity_0exf7kr" name="Error Handler" calledElement="errorProcess">
+      <bpmn:extensionElements>
+        <camunda:in source="errorType" target="errorType" />
+        <camunda:in source="technicalType" target="technicalType" />
+        <camunda:out source="error" target="error" />
+        <camunda:in source="order" target="order" />
+        <camunda:out source="orderStatus" target="orderStatus" />
+        <camunda:out source="lastResponse" target="lastResponse" />
+        <camunda:in source="exceptionType" target="exceptionType" />
+        <camunda:out source="exceptionType" target="exceptionType" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mzjhc4</bpmn:incoming>
+    </bpmn:callActivity>
+    <bpmn:sequenceFlow id="Flow_04nr4nb" sourceRef="Event_0ku8yu0" targetRef="Event_16heugz" />
+    <bpmn:endEvent id="Event_11wafbc">
+      <bpmn:incoming>Flow_1wc87zj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0mzjhc4" sourceRef="Event_16heugz" targetRef="Activity_0exf7kr" />
+    <bpmn:intermediateCatchEvent id="Event_16heugz" name="timer1">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="error_performFallback">happened</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_04nr4nb</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mzjhc4</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1sj7mk7">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1hf7nl6" sourceRef="Activity_1nlvq42" targetRef="Event_1j4fzor" />
+    <bpmn:sequenceFlow id="Flow_1wc87zj" sourceRef="Event_1j4fzor" targetRef="Event_11wafbc" />
+    <bpmn:intermediateCatchEvent id="Event_1j4fzor" name="timer2">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="lastResponse">${lastResponse}</camunda:inputParameter>
+          <camunda:outputParameter name="orderStatus">completed</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1hf7nl6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wc87zj</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1os06ii">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1uzu6e8" sourceRef="Event_1ow8tig" targetRef="Activity_1nlvq42" />
+    <bpmn:intermediateCatchEvent id="Event_1ow8tig" name="timer3">
+      <bpmn:incoming>Flow_1smffaa</bpmn:incoming>
+      <bpmn:outgoing>Flow_1uzu6e8</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1dx0o2n">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_0eyuv4q" name="Error_0a80f2k" errorCode="err-order-id" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PerformFallback">
+      <bpmndi:BPMNEdge id="Flow_1uzu6e8_di" bpmnElement="Flow_1uzu6e8">
+        <di:waypoint x="288" y="117" />
+        <di:waypoint x="350" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wc87zj_di" bpmnElement="Flow_1wc87zj">
+        <di:waypoint x="558" y="117" />
+        <di:waypoint x="642" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hf7nl6_di" bpmnElement="Flow_1hf7nl6">
+        <di:waypoint x="450" y="117" />
+        <di:waypoint x="522" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mzjhc4_di" bpmnElement="Flow_0mzjhc4">
+        <di:waypoint x="410" y="258" />
+        <di:waypoint x="410" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04nr4nb_di" bpmnElement="Flow_04nr4nb">
+        <di:waypoint x="410" y="175" />
+        <di:waypoint x="410" y="222" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1smffaa_di" bpmnElement="Flow_1smffaa">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="252" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="142" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wputku_di" bpmnElement="Activity_1nlvq42">
+        <dc:Bounds x="350" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18wd055_di" bpmnElement="Activity_0exf7kr">
+        <dc:Bounds x="350" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_11wafbc_di" bpmnElement="Event_11wafbc">
+        <dc:Bounds x="642" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0vsemtp_di" bpmnElement="Event_16heugz">
+        <dc:Bounds x="392" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="322" y="230" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kpq676_di" bpmnElement="Event_1j4fzor">
+        <dc:Bounds x="522" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="526" y="142" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0h730oy_di" bpmnElement="Event_1ow8tig">
+        <dc:Bounds x="252" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="256" y="142" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0d3kygf_di" bpmnElement="Event_0ku8yu0">
+        <dc:Bounds x="392" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="373" y="182" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
